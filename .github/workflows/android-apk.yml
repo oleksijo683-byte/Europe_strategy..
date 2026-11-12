@@ -1,0 +1,26 @@
+
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.2.2
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Android APK
+        run: |
+          mkdir -p build
+          godot --headless --path . --export-debug "Android APK (тест)" build/europe_strategy.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: europe-strategy-android-apk
+          path: build/europe_strategy.apk
